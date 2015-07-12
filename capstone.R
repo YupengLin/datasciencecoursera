@@ -1,0 +1,21 @@
+library(tm)
+library(RWeka)
+filePath <- "final/en_US/en_US.blogs.txt"
+conn_blog <- file(filePath)
+blogs <- readLines(conn_blog)
+line_blog <- blogs[1:1000]
+
+blog_corpus <- VCorpus(VectorSource(line_blog))
+toSpace <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
+blog_corpus <- tm_map(blog_corpus, toSpace, "/")
+blog_corpus <- tm_map(blog_corpus, toSpace, "@")
+blog_corpus<- tm_map(blog_corpus, toSpace, "\\|")
+blog_corpus <- tm_map(blog_corpus,content_transformer(tolower))
+blog_corpus <- tm_map(blog_corpus,removeNumbers)
+blog_corpus <- tm_map(blog_corpus,removePunctuation)
+blog_corpus <- tm_map(blog_corpus,removeWords, stopwords("english"))
+blog_corpus <- tm_map(blog_corpus, stripWhitespace)
+#tdm <- TermDocumentMatrix(blog_corpus)
+#TrigramTokenizer <- function(x) NGramTokenizer(x, Weka_control(min = 2, max = 2))
+#tdm <- TermDocumentMatrix(blog_corpus, control = list(tokenize = TrigramTokenizer))
+#tdm_matrix <- as.matrix(tdm)
